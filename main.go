@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gabrieltsntx/solid-waddle/graphhelper"
+	"conditionalaccess/graphhelper"
 
 	"github.com/joho/godotenv"
 )
@@ -51,7 +51,7 @@ func main() {
 			listUsers(graphHelper)
 		case 3:
 			// Run any Graph code
-			makeGraphCall(graphHelper)
+			getConditionalAccessPolicies(graphHelper)
 		default:
 			fmt.Println("Invalid choice! Please try again.")
 		}
@@ -105,4 +105,11 @@ func listUsers(graphHelper *graphhelper.GraphHelper) {
 	fmt.Println()
 	fmt.Printf("More users available? %t\n", nextLink != nil)
 	fmt.Println()
+}
+
+func getConditionalAccessPolicies(graphHelper *graphhelper.GraphHelper) {
+	err := graphHelper.GetConditionalAccessPolicies()
+	if err != nil {
+		log.Panicf("Error making Graph call: %v", err)
+	}
 }

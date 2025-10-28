@@ -2,6 +2,7 @@ package graphhelper
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
@@ -17,7 +18,7 @@ type GraphHelper struct {
 	appClient              *msgraphsdk.GraphServiceClient
 }
 
-func NewGraphHelpter() *GraphHelper {
+func NewGraphHelper() *GraphHelper {
 	g := &GraphHelper{}
 	return g
 }
@@ -78,4 +79,16 @@ func (g *GraphHelper) GetUsers() (models.UserCollectionResponseable, error) {
 			&users.UsersRequestBuilderGetRequestConfiguration{
 				QueryParameters: &query,
 			})
+}
+
+func (g *GraphHelper) GetConditionalAccessPolicies() error {
+	conditionalAccessPolicies, err := g.appClient.Policies().ConditionalAccessPolicies().Get(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	CAPS := conditionalAccessPolicies.GetValue()
+	for _, cap := range CAPS {
+		fmt.Printf("Conditional Access Policy: %s\n", *cap.GetDisplayName())
+	}
+	return nil
 }
